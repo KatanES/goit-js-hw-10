@@ -13,9 +13,6 @@ const refs = {
   error: document.querySelector('.error'),
 };
 
-// refs.loader.classList.remove('unvisible');
-// refs.error.classList.add('unvisible');
-// refs.selector.classList.add('unvisible');
 refs.divCatInfo.classList.add('unvisible');
 
 //створюємо options
@@ -58,9 +55,9 @@ function markup(arr) {
 
   let catTemp = arr.map(cat => cat.breeds[0].temperament);
 
-  const markup = `<img class="cat-img" src="${imgUrl}" width="600">
-    <p><b>Description: </b>${catDesc}</p>
-    <p><b>Temperament: </b>${catTemp}</p>`;
+  const markup = `<img class="cat-img" src="${imgUrl}" width="400">
+    <h2 class="heading ">Description:</h2> <p class="text ">${catDesc}</p>
+    <h2 class="heading ">Temperament:</h2><p class="text ">${catTemp}</p>`;
 
   refs.divCatInfo.insertAdjacentHTML('beforeend', markup);
 }

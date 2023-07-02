@@ -1,3 +1,27 @@
+body {
+  align-items: center;
+  color: #212121;
+  margin-left: 20px;
+}
+
+.cat-info {
+  width: 600px;
+  margin-top: 20px;
+
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
 .unvisible {
   display: none;
+}
+
+.me {
+  display: flex;
+}
+
+h1 {
+  color: red;
+  font-size: xx-large;
 }
