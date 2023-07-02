@@ -16,72 +16,80 @@ const refs = {
 
 //створюємо options
 function getAllCats(arr) {
-  for (let i = 0; i < arr.length; i += 1) {
-    let value = arr[i].id;
-    let text = arr[i].name;
+  const options = arr.map(breed => {
+    const { id, name } = breed;
+    return `<option value="${id}">${name}</option>`;
+  });
 
-    const optionsElement = document.createElement('option');
-    optionsElement.value = value;
-    optionsElement.textContent = text;
-    refs.selector.appendChild(optionsElement);
-  }
+  refs.selector.innerHTML = options.join('');
 }
 
 addCats();
 
 // робимо фетч та додаємо options
 function addCats() {
+  refs.loader.classList.add('visible');
+
   fetchBreeds()
     .then(getAllCats)
-    .catch(error => console.log(error));
+    .catch(error => {
+      console.log(error);
+      refs.error.classList.add('visible');
+    })
+    .finally(() => {
+      refs.loader.classList.remove('visible');
+    });
 }
 
 refs.selector.addEventListener('change', createModalCat);
 
-// функція, що прослуховує селект
-function onSelectBreed() {
-  const selectedValue = refs.selector.options[refs.selector.selectedIndex];
-  const selecteId = selectedValue.value;
+// функція, що прослуховує селект + додає розмітку з даними
+function createModalCat() {
+  const breedId = refs.selector.value;
 
-  return selecteId;
+  clearCatContent();
+  refs.loader.classList.add('visible');
+
+  fetchCatByBreed(breedId)
+    .then(data => {
+      markup(data);
+    })
+    .catch(error => {
+      console.log(error);
+      refs.error.classList.add('visible');
+    })
+    .finally(() => {
+      refs.loader.classList.remove('visible');
+    });
 }
 
 //Функція, що робить робить розмітку
-function markup(arr) {
-  let imgUrl = arr.map(link => link.url);
+function markup(data) {
+  const { url, breeds } = data[0];
+  const { description, temperament } = breeds[0];
 
-  let catDesc = arr.map(cat => cat.breeds[0].description);
+  const imageElement = document.createElement('img');
+  imageElement.classList.add('cat-img');
+  imageElement.src = url;
+  imageElement.width = '600';
 
-  let catTemp = arr.map(cat => cat.breeds[0].temperament);
+  const descElement = document.createElement('p');
+  descElement.innerHTML = `<b>Description:</b> ${description}`;
 
-  const markup = `<img class="cat-img" src="${imgUrl}" width="600">
-    <p><b>Description: </b>${catDesc}</p>
-    <p><b>Temperament: </b>${catTemp}</p>`;
+  const tempElement = document.createElement('p');
+  tempElement.innerHTML = `<b>Temperament:</b> ${temperament}`;
 
-  refs.divCatInfo.insertAdjacentHTML('beforeend', markup);
-}
-
-// додає розмітку з даними
-function createModalCat() {
-  const breedId = onSelectBreed();
-
-  const isContent = document.querySelector('.cat-img');
-
-  if (isContent) {
-    clearCatContent();
-  }
-
-  fetchCatByBreed(breedId)
-    .then(markup)
-    .catch(error => console.log(error));
+  refs.divCatInfo.appendChild(imageElement);
+  refs.divCatInfo.appendChild(descElement);
+  refs.divCatInfo.appendChild(tempElement);
 }
 
 // Видаляє попередній контент
 
 function clearCatContent() {
-  const children = Array.from(refs.divCatInfo.children);
-
-  children.forEach(child => {
-    refs.divCatInfo.removeChild(child);
-  });
+  while (refs.divCatInfo.firstChild) {
+    refs.divCatInfo.removeChild(refs.divCatInfo.firstChild);
+  }
 }
+
+addCats();

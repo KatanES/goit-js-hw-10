@@ -1,6 +1,6 @@
 const url = 'https://api.thecatapi.com/v1';
 const API_KEY =
-  'live_9DXEg4Lh2chY88wyj3bubsvvhA1yqqWDwllwOi10UakXQykqShGzO9Gw8MyIBcsl';
+  'live_VOS8H6eE1bRo0KX7MvmqaEz5e9rv9Tb2hSM26T9bxv56LWqx7GPaW4LhtRe2U6ms';
 
 // Функція, яка виконує HTTP-запит  і повертає проміс із масивом порід
 
